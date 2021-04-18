@@ -1,0 +1,19 @@
+#userInputTable {
+  width: 20%;
+  border: 1px solid black;
+}
+
+#userInputTable tr th {
+  border-right: 1px solid black;
+  width: 20%;
+}
+
+#addRowButton {
+  width: 20%;
+  margin-top: 2px;
+}
+
+#convertButton {
+  width: 20%;
+  margin-top: 2px;
+}
