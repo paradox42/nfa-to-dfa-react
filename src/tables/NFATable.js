@@ -6,25 +6,33 @@ class NFATable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { totalState: 1 };
+    window.localStorage.setItem("totalState", 1);
   }
 
   addOneRow = () => {
-    this.setState((state) => {
-      return {
-        totalState: state.totalState + 1,
-      };
-    });
+    this.setState(
+      (state) => {
+        return {
+          totalState: state.totalState + 1,
+        };
+      },
+      () => {
+        window.localStorage.setItem("totalState", this.state.totalState);
+      }
+    );
   };
 
   render() {
     return (
-      <div id="NFA">
+      <div>
         <table id="userInputTable">
           <tbody>
             <tr>
               <th>State</th>
               <th>0</th>
               <th>1</th>
+              <th>E</th>
+              <th>Make accepting</th>
             </tr>
 
             <NFARows totalState={this.state.totalState}></NFARows>

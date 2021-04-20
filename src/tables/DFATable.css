@@ -1,0 +1,14 @@
+#convertButton {
+    margin-top: 5%;
+    margin-bottom: 1px;
+}
+
+#DFATable {
+    width: 40%;
+    border: 1px solid black;
+}
+
+#DFATable tr th {
+    border-right: 1px solid black;
+    width: 10%;
+}
