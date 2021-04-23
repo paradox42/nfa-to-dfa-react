@@ -1,5 +1,6 @@
 import React from "react";
 import "./DFATable.css";
+import NFATable from "./NFATable";
 
 class DFATable extends React.Component {
   convert = () => {
@@ -9,25 +10,38 @@ class DFATable extends React.Component {
 
   convertToDFA = (inputJSON) => {
     var DFAJson = {};
-    DFAJson = this.getDFAJson(inputJSON, [Object.keys(inputJSON)[0]]);
+    DFAJson = this.getDFAJson(inputJSON, Object.keys(inputJSON)[0]);
   };
 
-  getDFAJson = (inputJSON, currentStates) => {
+  getDFAJson = (inputJSON, initialState) => {
     var newRow = {};
-    var newStates = this.getState(inputJSON, currentStates);
+    var newStates = this.getStates(inputJSON, initialState, [initialState]);
+    console.log(newStates);
   };
 
-  getState = (inputJSON, currentStates) => {
-    currentStates.forEach((state) => {
-      var lambdaTransStates = inputJSON[state]["2"];
-      if (lambdaTransStates) {
-        lambdaTransStates.forEach((state) => {
-          !currentStates.includes(state) && currentStates.push(state);
-        });
-      }
-    });
-    console.log(currentStates);
-    return currentStates;
+  getStates = (inputJSON, NFAState, DFAStates) => {
+    var lambdaTransStates =
+      inputJSON[NFAState] && inputJSON[NFAState]["2"]
+        ? inputJSON[NFAState]["2"]
+        : null;
+    lambdaTransStates &&
+      lambdaTransStates.forEach((state) => {
+        if (lambdaTransStates && !DFAStates.includes(state) && state) {
+          DFAStates.push(state);
+          this.getStates(inputJSON, state, DFAStates);
+        }
+      });
+    return DFAStates;
+    // currentStates.forEach((state) => {
+    //   var lambdaTransStates = inputJSON[state]["2"];
+    //   if (lambdaTransStates) {
+    //     lambdaTransStates.forEach((state) => {
+    //       !currentStates.includes(state) && currentStates.push(state);
+    //     });
+    //   }
+    // });
+    // console.log(currentStates);
+    // return currentStates;
   };
 
   getUserInputs = () => {
