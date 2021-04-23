@@ -14,7 +14,7 @@ class NFARows extends React.Component {
             <input type="text" id={num + "1"} className="userInputs"></input>
           </td>
           <td>
-            <input type="text" id={num + "1"} className="userInputs"></input>
+            <input type="text" id={num + "2"} className="userInputs"></input>
           </td>
           <td>
             <input type="checkbox" id={"acceptingState" + num} className="userInputs" />

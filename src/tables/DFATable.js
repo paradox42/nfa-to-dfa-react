@@ -3,16 +3,41 @@ import "./DFATable.css";
 
 class DFATable extends React.Component {
   convert = () => {
-    this.storeValues();
+    const userInputs = this.getUserInputs();
+    this.convertToDFA(userInputs);
   };
 
-  storeValues = () => {
-    window.localStorage.NFATable = {};
+  convertToDFA = (inputJSON) => {
+    var DFAJson = {};
+    DFAJson = this.getDFAJson(inputJSON, [Object.keys(inputJSON)[0]]);
+  };
+
+  getDFAJson = (inputJSON, currentStates) => {
+    var newRow = {};
+    var newStates = this.getState(inputJSON, currentStates);
+  };
+
+  getState = (inputJSON, currentStates) => {
+    currentStates.forEach((state) => {
+      var lambdaTransStates = inputJSON[state]["2"];
+      if (lambdaTransStates) {
+        lambdaTransStates.forEach((state) => {
+          !currentStates.includes(state) && currentStates.push(state);
+        });
+      }
+    });
+    console.log(currentStates);
+    return currentStates;
+  };
+
+  getUserInputs = () => {
+    var NFATable = {};
     const inputRows = document.querySelectorAll(".userInputRows");
     for (var i = 0; i < inputRows.length; i++) {
       const rowData = this.getRowValues(inputRows[i]);
-      console.log(rowData);
+      NFATable[`q${i}`] = rowData;
     }
+    return NFATable;
   };
 
   getRowValues = (row) => {
@@ -20,12 +45,23 @@ class DFATable extends React.Component {
     var rowData = {};
     for (var i = 0; i < oneRow.length; i++) {
       if (i < 3) {
-        rowData[i] = oneRow[i].value;
-      } else if (i == oneRow.length - 1) {
+        var inputStr = oneRow[i].value.replace(/ /g, ""); //get rid of all spaces
+        if (inputStr[0] === "{") {
+          rowData[i] = this.convertToArr(inputStr);
+        } else {
+          rowData[i] = inputStr.split(",");
+        }
+      } else if (i === oneRow.length - 1) {
         rowData.isFinalState = oneRow[i].checked;
       }
     }
     return rowData;
+  };
+
+  convertToArr = (str) => {
+    str = str.substring(1, str.length - 1);
+    const arr = str.split(",");
+    return arr;
   };
 
   render() {
@@ -40,6 +76,7 @@ class DFATable extends React.Component {
               <th>State</th>
               <th>0</th>
               <th>1</th>
+              <th>Is accepting</th>
             </tr>
             <tr>
               <th>[q0,q3]</th>

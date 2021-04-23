@@ -25,6 +25,7 @@ class NFATable extends React.Component {
   render() {
     return (
       <div>
+        <h1>Input your NFA table below</h1>
         <table id="userInputTable">
           <tbody>
             <tr>
