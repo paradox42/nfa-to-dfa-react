@@ -1,4 +1,6 @@
 import React from "react";
+import { isEqual } from "lodash";
+
 import "./DFATable.css";
 import NFATable from "./NFATable";
 
@@ -9,14 +11,84 @@ class DFATable extends React.Component {
   };
 
   convertToDFA = (inputJSON) => {
-    var DFAJson = {};
-    DFAJson = this.getDFAJson(inputJSON, Object.keys(inputJSON)[0]);
+    var DFAArr = [];
+    var firstRow = this.getOneRow(inputJSON, Object.keys(inputJSON)[0]);
+    DFAArr.push(firstRow);
+    this.getAllRows(inputJSON, DFAArr, firstRow);
   };
 
-  getDFAJson = (inputJSON, initialState) => {
+  getAllRows = (inputJSON, DFAArr, rowToMap) => {
+    var stateName = rowToMap["stateName"];
+    var transStatesOnA = rowToMap["0"];
+    var transStatesOnB = rowToMap["1"];
+    // console.log(`${stateName}: {${transStatesOnA}}, {${transStatesOnB}}`);
+    if (this.isNewState(DFAArr, transStatesOnA)) {
+    }
+  };
+
+  isNewState = (DFAArr, transStatesOnA) => {
+    DFAArr.forEach((row) => {
+      if (isEqual(row.stateName.sort(), transStatesOnA.sort())) {
+        return false;
+      }
+    });
+    return true;
+  };
+
+  getOneRow = (inputJSON, initialState) => {
     var newRow = {};
     var newStates = this.getStates(inputJSON, initialState, [initialState]);
-    console.log(newStates);
+    var statesForA = [];
+    var statesForB = [];
+    newStates.forEach((sourceState) => {
+      statesForA = this.getTransitionStates(
+        inputJSON,
+        sourceState,
+        "0",
+        statesForA
+      );
+
+      statesForB = this.getTransitionStates(
+        inputJSON,
+        sourceState,
+        "1",
+        statesForB
+      );
+    });
+    newRow = { stateName: newStates, 0: statesForA, 1: statesForB };
+    return newRow;
+  };
+
+  getTransitionStates = (
+    inputJSON,
+    sourceState,
+    inputAlphabet,
+    targetStates
+  ) => {
+    if (inputJSON[sourceState] && inputJSON[sourceState][inputAlphabet]) {
+      var NFAStates = inputJSON[sourceState][inputAlphabet];
+    }
+    if (NFAStates && NFAStates.length) {
+      NFAStates.forEach((state) => {
+        if (!targetStates.includes(state)) {
+          targetStates = [...targetStates, state];
+        }
+        if (inputJSON[state] && inputJSON[state]["2"]) {
+          var lambdaTransStates = inputJSON[state]["2"];
+        }
+        if (lambdaTransStates) {
+          lambdaTransStates.forEach((state) => {
+            if (!targetStates.includes(state) && state !== "") {
+              targetStates.push(state);
+              targetStates.concat(
+                this.getTransitionStates(inputJSON, state, "0", targetStates)
+              );
+            }
+          });
+        }
+      });
+    }
+    return targetStates;
   };
 
   getStates = (inputJSON, NFAState, DFAStates) => {
@@ -32,16 +104,6 @@ class DFATable extends React.Component {
         }
       });
     return DFAStates;
-    // currentStates.forEach((state) => {
-    //   var lambdaTransStates = inputJSON[state]["2"];
-    //   if (lambdaTransStates) {
-    //     lambdaTransStates.forEach((state) => {
-    //       !currentStates.includes(state) && currentStates.push(state);
-    //     });
-    //   }
-    // });
-    // console.log(currentStates);
-    // return currentStates;
   };
 
   getUserInputs = () => {

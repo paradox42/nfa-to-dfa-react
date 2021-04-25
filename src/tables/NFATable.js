@@ -30,8 +30,8 @@ class NFATable extends React.Component {
           <tbody>
             <tr>
               <th>State</th>
-              <th>0</th>
-              <th>1</th>
+              <th>a</th>
+              <th>b</th>
               <th>E</th>
               <th>Make accepting</th>
             </tr>
