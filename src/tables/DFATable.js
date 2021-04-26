@@ -233,24 +233,24 @@ class DFATable extends React.Component {
       if (row[0]) {
         row[0].forEach((state) => {
           if (state) {
-            input0.push(state);
+            input0.push(state + " ");
           } else {
-            input0.push("E");
+            input0.push("E ");
           }
         });
       } else {
-        input0 = "E";
+        input0 = "E ";
       }
       if (row[1]) {
         row[1].forEach((state) => {
           if (state) {
-            input1.push(state);
+            input1.push(state + " ");
           } else {
-            input1.push("E");
+            input1.push("E ");
           }
         });
       } else {
-        input1 = "E";
+        input1 = "E ";
       }
       newRow["0"] = input0;
       newRow["1"] = input1;
